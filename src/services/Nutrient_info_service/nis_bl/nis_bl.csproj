@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\nis_dal\nis_models.csproj" />
+    <ProjectReference Include="..\nis_models\nis_dal.csproj" />
+  </ItemGroup>
+
+</Project>
