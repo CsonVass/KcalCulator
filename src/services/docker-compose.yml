@@ -8,13 +8,10 @@ services:
       dockerfile: Nutrient_info_service\nis_api\Dockerfile
 
 
-  #mongodb_container:
-  #  image: mongo:latest
-  #  container_name: nutrient-db
-  #  ports:
-  #    - 27017:27017
-  #  environment:
-  #    - MONGO_INITDB_DATABASE=FoodDb
-  #    - MONGO_INITDB_ROOT_USERNAME=admin
-  #    - MONGO_INITDB_ROOT_PASSWORD=admin
+  mongodb_container:
+    image: mongo:latest
+    container_name: nutrient-db
+    ports:
+      - 27017:27017
+
       
