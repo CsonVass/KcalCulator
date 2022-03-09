@@ -4,7 +4,7 @@ using Xunit;
 using nis_dal.Repository;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using System.Threading.Tasks;
-using nis_models;
+using NutrientService.Models;
 using System.Collections.Generic;
 
 namespace nis_test

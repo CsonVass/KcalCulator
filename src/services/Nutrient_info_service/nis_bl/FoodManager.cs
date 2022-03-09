@@ -1,5 +1,5 @@
 ﻿using nis_dal.Repository;
-using nis_models;
+using NutrientService.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,12 @@ namespace nis_bl
             this.remoteFoodRepository = remoteFoodRepository;
         }
 
-        public async Task<IReadOnlyCollection<KeyValuePair<string, string>>> GetFoodsByName (string nameToSearchFor)
+        public async Task<IReadOnlyCollection<Food>> GetFoods()
+        {
+            return new List<Food>(await foodRepository.GetFoods());
+        }
+
+        public async Task<IReadOnlyCollection<Food>> GetFoodsByName (string nameToSearchFor)
         {
             List<Food> foods = new List<Food>();
             try
@@ -32,14 +37,7 @@ namespace nis_bl
                 foods = new List<Food>(await foodRepository.GetFoodByName(nameToSearchFor));
             }
 
-            List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>();
-
-            foreach (Food food in foods)
-            {
-                result.Add(new KeyValuePair<string, string>(food.Id, food.FoodName));
-            }
-
-            return result;
+            return foods;
             
         } 
 

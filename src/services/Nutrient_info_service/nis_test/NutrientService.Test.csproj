@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -22,10 +22,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\nis_api\nis_api.csproj" />
-    <ProjectReference Include="..\nis_bl\nis_bl.csproj" />
-    <ProjectReference Include="..\nis_dal\nis_models.csproj" />
-    <ProjectReference Include="..\nis_models\nis_dal.csproj" />
+    <ProjectReference Include="..\nis_api\NutrientService.API.csproj" />
+    <ProjectReference Include="..\nis_bl\NutrientService.BL.csproj" />
+    <ProjectReference Include="..\nis_dal\NutrientService.Models.csproj" />
+    <ProjectReference Include="..\nis_models\NutrientService.DAL.csproj" />
   </ItemGroup>
 
 </Project>

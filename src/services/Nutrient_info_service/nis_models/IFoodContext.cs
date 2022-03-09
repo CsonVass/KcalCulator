@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB;
 using MongoDB.Driver;
-using nis_models;
+using NutrientService.Models;
 
 namespace nis_dal
 {

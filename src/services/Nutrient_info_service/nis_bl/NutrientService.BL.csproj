@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\nis_dal\NutrientService.Models.csproj" />
+    <ProjectReference Include="..\nis_models\NutrientService.DAL.csproj" />
+  </ItemGroup>
+
+</Project>

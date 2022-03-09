@@ -4,6 +4,8 @@ src/data
 */.vs/
 */*.vs/
 src/services/TestResults
+src/services/bin/
+src/services/obj/
 src/services/*/bin/
 src/services/*/obj/
 src/services/*/*/bin/

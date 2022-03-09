@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using nis_bl;
-using nis_models;
+using NutrientService.Models;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,17 +8,31 @@ using System.Threading.Tasks;
 namespace nis_api.Controllers
 {
     [ApiController]
-    [Route("api/food_data")]
+    [Route("api/nutrient")]
     public class FoodDataController : ControllerBase
     {
         private readonly FoodManager foodManager;
 
         public FoodDataController(FoodManager _fm) => this.foodManager = _fm;
 
+        [HttpGet]
+        [ProducesResponseType(typeof(List<Food>), (int) HttpStatusCode.OK)]
+        public async Task<ActionResult<List<Food>>> GetFoods(){
+            List<Food> result = new List<Food>(await foodManager.GetFoods());
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+
+        }
+        
         [HttpGet("{name}")]
-        [ProducesResponseType(typeof(IReadOnlyCollection<KeyValuePair<string, string>>), (int) HttpStatusCode.OK)]
-        public async Task<ActionResult<IReadOnlyCollection<KeyValuePair<string, string>>>> GetFoodByName(string name){
-            List<KeyValuePair<string, string>> result = new List<KeyValuePair<string, string>>(await foodManager.GetFoodsByName(name));
+        [ProducesResponseType(typeof(FoodNamesDto), (int) HttpStatusCode.OK)]
+        public async Task<ActionResult<FoodNamesDto>> GetFoodByName(string name){
+            FoodNamesDto result = new FoodNamesDto(await foodManager.GetFoodsByName(name));
 
             if (result == null)
             {
