@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REGISTRY-}nutrientserviceapi
     build:
       context: .
-      dockerfile: Nutrient_info_service\nis_api\Dockerfile
+      dockerfile: NutrientService\NutrientService.API\Dockerfile
 
 
   mongodb_container:
@@ -13,5 +13,4 @@ services:
     container_name: nutrient-db
     ports:
       - 27017:27017
-
       

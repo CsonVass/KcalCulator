@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Windows</DockerTargetOS>
-    <ProjectGuid>38ac28bb-0044-4358-99d6-c01aa406a2f0</ProjectGuid>
+    <ProjectGuid>5421f4a0-91bd-4a6b-b908-fd045b3d2c3a</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://{ServiceIPAddress}{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>nutrientservice.api</DockerServiceName>
