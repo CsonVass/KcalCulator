@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DiaryService.Models\DiaryService.Models.csproj" />
     <ProjectReference Include="..\DiaryService.DAL\DiaryService.DAL.csproj" />
+    <ProjectReference Include="..\DiaryService.Models\DiaryService.Models.csproj" />
   </ItemGroup>
 
 </Project>

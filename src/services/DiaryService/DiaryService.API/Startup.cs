@@ -27,10 +27,22 @@ namespace DiaryService.API
 
         public IConfiguration Configuration { get; }
 
+        public string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                    builder =>
+                                    {
+                                        builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+                                    });
+            });
+
 
             services.Configure<DiaryDatabaseSettings>(
                 Configuration.GetSection("CatalogDatabaseSettings"));
@@ -65,6 +77,8 @@ namespace DiaryService.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

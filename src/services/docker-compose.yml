@@ -6,11 +6,50 @@ services:
     build:
       context: .
       dockerfile: NutrientService\NutrientService.API\Dockerfile
+    networks:
+        - nutrient-network
 
 
-  mongodb_container:
+  mongodb_nutrient_container:
     image: mongo:latest
     container_name: nutrient-db
     ports:
-      - 27017:27017
+      - 27018:27017
+    volumes:
+      - nutrient-data:C:/app/mongo/nutrient
+    networks:
+        - nutrient-network
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=root 
+        - MONGO_INITDB_ROOT_PASSWORD=root 
       
+  diaryservice.api:
+    image: ${DOCKER_REGISTRY-}diaryserviceapi
+    build:
+      context: .
+      dockerfile: DiaryService\DiaryService.API\Dockerfile
+    networks:
+        - diary-network
+
+  mongodb_diary_container:
+    image: mongo:latest
+    container_name: diary-db
+    ports:
+      - 27019:27017
+    volumes:
+      - diary-data:C:/app/mongo/diary
+    networks:
+        - diary-network
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=root 
+        - MONGO_INITDB_ROOT_PASSWORD=root 
+
+
+volumes:
+  nutrient-data:
+  diary-data:
+
+networks:
+  nutrient-network:
+  diary-network:
+

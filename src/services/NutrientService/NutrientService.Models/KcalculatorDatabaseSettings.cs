@@ -8,7 +8,7 @@ namespace NutrientService.DAL.Models
 {
     public class KcalculatorDatabaseSettings : IKcalculatorDatabaseSettings
     {
-        public string ConnectionString { get; set; } = "mongodb://nutrient-db:27017";
+        public string ConnectionString { get; set; } = "mongodb://localhost:27017";
         public string DatabaseName { get; set; } = "FoodDb";
         public string CollectionName { get; set; } = "Foods";
 
