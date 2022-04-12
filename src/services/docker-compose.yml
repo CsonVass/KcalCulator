@@ -10,19 +10,6 @@ services:
         - nutrient-network
 
 
-  mongodb_nutrient_container:
-    image: mongo:latest
-    container_name: nutrient-db
-    ports:
-      - 27018:27017
-    volumes:
-      - nutrient-data:C:/app/mongo/nutrient
-    networks:
-        - nutrient-network
-    environment:
-        - MONGO_INITDB_ROOT_USERNAME=root 
-        - MONGO_INITDB_ROOT_PASSWORD=root 
-      
   diaryservice.api:
     image: ${DOCKER_REGISTRY-}diaryserviceapi
     build:
@@ -31,23 +18,24 @@ services:
     networks:
         - diary-network
 
-  mongodb_diary_container:
-    image: mongo:latest
-    container_name: diary-db
-    ports:
-      - 27019:27017
-    volumes:
-      - diary-data:C:/app/mongo/diary
-    networks:
-        - diary-network
-    environment:
-        - MONGO_INITDB_ROOT_USERNAME=root 
-        - MONGO_INITDB_ROOT_PASSWORD=root 
 
+  mongodb_container:
+    image: mongo:5.0
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+       - shared_database:/usr/local/mongo
+    networks:
+        - nutrient-network
+        - diary-network
+    #environment:
+    #    - MONGO_INITDB_ROOT_USERNAME=root 
+    #    - MONGO_INITDB_ROOT_PASSWORD=root 
+      
 
 volumes:
-  nutrient-data:
-  diary-data:
+    shared_database:
 
 networks:
   nutrient-network:
