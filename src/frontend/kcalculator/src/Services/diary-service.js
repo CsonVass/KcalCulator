@@ -2,7 +2,7 @@ const axios = require('axios');
 
 export function getDiaries(){
     try{
-        const promise = axios.get('https://localhost:44352/api/diaries')
+        const promise = axios.get('https://localhost:63542/api/diaries')
         const dataPromise = promise.then((response) => response.data)
         return dataPromise
     }catch (err) {
@@ -12,7 +12,7 @@ export function getDiaries(){
 
 export function getDiary(id){
     try{
-        const promise = axios.get(`https://localhost:44352/api/diaries/${id}`)
+        const promise = axios.get(`https://localhost:63542/api/diaries/${id}`)
         const dataPromise = promise.then((response) => response.data)
         return dataPromise
     }catch (err) {
