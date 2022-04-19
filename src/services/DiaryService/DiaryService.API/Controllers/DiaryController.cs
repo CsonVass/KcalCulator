@@ -46,6 +46,19 @@ public class DiaryController : ControllerBase
 
     }
 
+    [HttpGet("{userid}/{date}")]
+    [ProducesResponseType(typeof(DailyRecordsDTO), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<DailyRecordsDTO>> GetDiaryByDate(string userid, string date)
+    {
+        DailyRecordsDTO result = await diaryManager.GetDailyRecords(userid, date);
+
+        if(result == null)
+        {
+            return NotFound();
+        }
+        return Ok(result);
+    }
+
     //POST
 
     [HttpPost("{userid}")]
@@ -72,8 +85,8 @@ public class DiaryController : ControllerBase
     }
 
     [HttpPost("{userid}/dailyrecords/{date}")]
-    [ProducesResponseType(typeof(DiaryDTO), (int)HttpStatusCode.Created)]
-    public async Task<ActionResult<DiaryDTO>> PostRecord(string userid, string date, [FromBody] Record record)
+    [ProducesResponseType(typeof(RecordUpdateDTO), (int)HttpStatusCode.Created)]
+    public async Task<ActionResult<RecordUpdateDTO>> PostRecord(string userid, string date, [FromBody] RecordCreateDTO record)
     {
         if (userid == null || date == null || record == null)
         {
@@ -110,7 +123,7 @@ public class DiaryController : ControllerBase
 
     [HttpPut("{userid}/dailyrecords/{date}")]
     [ProducesResponseType(typeof(DiaryDTO), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<DiaryDTO>> PutRecord(string userid, string date, [FromBody] Record record)
+    public async Task<ActionResult<DiaryDTO>> PutRecord(string userid, string date, [FromBody] RecordUpdateDTO record)
     {
         if (userid == null || date == null || record == null)
         {

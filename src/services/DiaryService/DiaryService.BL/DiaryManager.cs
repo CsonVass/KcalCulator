@@ -42,9 +42,9 @@ namespace DiaryService.BL
         }
 
         //Cretae
-        public async Task<bool> CreateRecord(Record record)
+        public async Task<bool> CreateRecord(RecordCreateDTO record)
         {
-            return await diaryRepository.CreateRecord(record, record.UserId);
+            return await diaryRepository.CreateRecord(record);
         }
 
         public async Task<bool> CreateDiary(string userId, Nutrients goals)
@@ -69,7 +69,7 @@ namespace DiaryService.BL
             });
         }
 
-        public async Task<bool> UpdateRecord(Record record)
+        public async Task<bool> UpdateRecord(RecordUpdateDTO record)
         {
             return await diaryRepository.UpdateRecord(record);
         }

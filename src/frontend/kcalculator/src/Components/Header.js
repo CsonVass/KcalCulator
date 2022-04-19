@@ -1,7 +1,7 @@
 import image from '../Assets/kcalculator-logo.png'
 import { Navbar } from 'react-bootstrap';
 
-const Header = () => (
+const Header = ({userId}) => (
     (
         <Navbar className="Header navbar navbar-light">
         <div className="container-fluid">
@@ -10,6 +10,7 @@ const Header = () => (
             KcalCulator
           </a>
         </div>
+        <p>Logged in user id: {userId}</p>
       </Navbar>
       )
 

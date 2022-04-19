@@ -46,7 +46,7 @@ namespace DiaryService.DAL.Repository
             return diary
                 .Consumption
                 .Where(dr => dr.Date == date)
-                .FirstOrDefault();
+                .FirstOrDefault() ?? new DailyRecords { Date=date, Records= new List<Record>()};
         }
 
         public async Task<Record> GetRecord(string recordId, string userId = null, string date = null)
@@ -96,9 +96,9 @@ namespace DiaryService.DAL.Repository
             await _context.Diaries.InsertOneAsync(diary);
             return true;
         }
-        public async Task<bool> CreateRecord(Record record, string userId) 
+        public async Task<bool> CreateRecord(RecordCreateDTO record) 
         {
-            Diary diary = await GetDiary(userId);
+            Diary diary = await GetDiary(record.UserId);
             if(diary == null)
             {
                 return false;
@@ -141,7 +141,7 @@ namespace DiaryService.DAL.Repository
 
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
         }
-        public async Task<bool> UpdateRecord(Record record) 
+        public async Task<bool> UpdateRecord(RecordUpdateDTO record) 
         {
             Diary diary = await GetDiary(record.UserId);
             var _record = diary.Consumption.Where(drs => drs.Date == record.Date)
@@ -153,7 +153,6 @@ namespace DiaryService.DAL.Repository
             }
 
             _record.Quantity = record.Quantity;
-            _record.Food = record.Food;
 
             return await UpdateDiary(diary);
             

@@ -1,11 +1,8 @@
-import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const DateSelect = () => {
-    const [startDate, setStartDate] = useState(new Date());
-
+const DateSelect = ({startDate, setDate}) => {
   return (
   <div className="col d-flex justify-content-around align-items-center">
     
@@ -13,7 +10,7 @@ const DateSelect = () => {
     <div>
     <DatePicker 
       selected={startDate} 
-      onChange={(date) => setStartDate(date)}
+      onChange={(date) => setDate(date)}
       dateFormat="yyyy-MM-dd" />
       </div>
   </div>

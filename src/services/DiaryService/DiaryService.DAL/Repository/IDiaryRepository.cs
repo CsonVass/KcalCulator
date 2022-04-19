@@ -18,11 +18,11 @@ namespace DiaryService.DAL.Repository
 
         //Create
         public Task<bool> CreateDiary(Diary diary);
-        public Task<bool> CreateRecord(Record record, string userId);
+        public Task<bool> CreateRecord(RecordCreateDTO record);
 
         //Update
         public Task<bool> UpdateDiary(Diary diary);
-        public Task<bool> UpdateRecord(Record record);
+        public Task<bool> UpdateRecord(RecordUpdateDTO record);
 
         //Delete
         public Task<bool> DeleteDiary(string userId);
