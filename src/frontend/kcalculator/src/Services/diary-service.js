@@ -50,6 +50,41 @@ export function postFoodItem(id, date, food, amount){
       }
 }
 
+//PUT
+export function putGoals(id, goals){   
+    try{
+    const promise = axios.put(`https://localhost:60088/api/diaries/${id}`, {
+        calorie: goals.calorie || 0,
+        protein: goals.protein || 0,
+        fat: goals.fat || 0,
+        carbs: goals.carbs || 0,
+        fiber: goals.fiber || 0
+
+      });
+      const dataPromise = promise.then((respone) => respone.data)  
+    return dataPromise; 
+    }catch(error) {
+        console.log(error.response);
+      }
+}
+
+
+export function putFood(id, date, foodid, amount){   
+    try{
+    const promise = axios.put(`https://localhost:60088/api/diaries/${id}/dailyrecords/${date}`, {
+        recordId: foodid,
+        userId: id,
+        quantity: amount, 
+        date: date
+
+      });
+      const dataPromise = promise.then((respone) => respone.data)  
+    return dataPromise; 
+    }catch(error) {
+        console.log(error.response);
+      }
+}
+
 
 //DELETE
 export function deleteFood(id, date, recordid){

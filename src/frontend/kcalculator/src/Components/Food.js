@@ -1,11 +1,20 @@
 import { ButtonGroup } from "react-bootstrap"
+import { useState } from "react"
 
-const Food = ({ foodName, amount, nutrients, onDelete }) => {
+const Food = ({ foodName, amount, nutrients, onDelete, onEdit }) => {
 
+    const [isEdited, setIsEdited] = useState(false);
+    const [amount_, setAmount_] = useState(amount);
+
+    const handleSave = () => {
+        onEdit(amount_)
+        setIsEdited(false);
+    }
 
     return (
         <li className="food list-group-item">
-            <h2 className="d-md-flex justify-content-md-center">{foodName} - {amount}g</h2>
+            <h2 className="d-md-flex justify-content-md-center">{foodName} - {isEdited ? 
+            <input type="number" defaultValue={amount} onChange={(e) => setAmount_(e.target.value)}/> :  amount}g</h2>
             <div className="container">
                 <div className="row">
                     <div className="col-6">Kcal: {nutrients.calorie}</div>
@@ -24,10 +33,16 @@ const Food = ({ foodName, amount, nutrients, onDelete }) => {
                 </div>
 
             </div>
-            <ButtonGroup className="d-grid gap-2 d-md-flex justify-content-md-center">
-                <div type="button" className="btn btn-outline-danger " onClick={() => onDelete()}>Delete</div>
-                <div type="button" className="btn btn-outline-warning ">Edit</div>
-            </ButtonGroup>
+            <div className="d-flex justify-content-end"> 
+                           
+               {isEdited ? 
+                <div type="button" className="btn btn-outline-primary btn-md" onClick={() => handleSave()}>Save</div>
+               :  
+               <ButtonGroup className="gap-2"> 
+                <div type="button" className="btn btn-outline-warning btn-md" onClick={() => setIsEdited(true)}>Edit</div>
+                    <div type="button" className="btn btn-outline-danger btn-md" onClick={() => onDelete()}>Delete</div>
+                </ButtonGroup>}
+            </div>
         </li>
     )
 }

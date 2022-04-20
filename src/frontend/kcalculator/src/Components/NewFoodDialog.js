@@ -68,7 +68,7 @@ const NewFoodDialog = ({onAdd}) => {
   
     return (
       <>
-        <Button variant="success" onClick={handleShow}>
+        <Button variant="success" className="mb-3" onClick={handleShow}>
           Add food
         </Button>
   
@@ -78,7 +78,7 @@ const NewFoodDialog = ({onAdd}) => {
           </Modal.Header>
           <Modal.Body>
             <Form>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Group className="mb-3" controlId="newFoodForm.ControlInput1">
                 <Form.Label>Search for foodname</Form.Label>
                 <Form.Control                
                   autoFocus
@@ -90,7 +90,7 @@ const NewFoodDialog = ({onAdd}) => {
                onClick={()=>handleSearchClick()}
                >Search</Button> 
               </Form.Group>
-              <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+              <Form.Group className="mb-3" controlId="newFoodForm.ControlInput2">
                 <Form.Label>Add amount in grams</Form.Label>
                 <Form.Control
                   onChange={(e) => setAmount(e.target.value)}
@@ -100,7 +100,7 @@ const NewFoodDialog = ({onAdd}) => {
               </Form.Group>
               <Form.Group
                 className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
+                controlId="newFoodForm.ControlTextarea1"
               >
                 <Form.Label>Results</Form.Label>
                 <Form.Select

@@ -1,6 +1,23 @@
 version: '3.4'
 
 services:
+
+  #traefik:
+  #  image: "traefik:v2.6"
+  #  container_name: "traefik"
+  #  command:
+  #    #- "--log.level=DEBUG"
+  #    - "--api.insecure=true"
+  #    - "--providers.docker=true"
+  #    - "--providers.docker.exposedbydefault=false"
+  #    - "--entrypoints.web.address=:80"
+  #  ports:
+  #    - "80:80"
+  #    - "8080:8080"
+  #  volumes:
+  #    - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+
   nutrientservice.api:
     image: ${DOCKER_REGISTRY-}nutrientserviceapi
     build:
@@ -9,7 +26,12 @@ services:
     ports:
       - 60087:443
     networks:
-        - nutrient
+        - backend
+        - web
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.nutrients.rule=Host(`kcalculator.com`) && Path(`/v1/nutrients`)"
+    #  #- "traefik.http.routers.nutrients.entrypoints=web"
 
 
   diaryservice.api:
@@ -20,7 +42,12 @@ services:
     ports:
       - 60088:443
     networks:
-        - diary
+        - backend
+        - web
+    #labels:
+    #  - "traefik.enable=true"
+    #  - "traefik.http.routers.diary.rule=Host(`kcalculator.com`) && Path(`/v1/diary`)"
+    #  #- "traefik.http.routers.diary.entrypoints=web"
 
 
   mongodb_container:
@@ -31,8 +58,7 @@ services:
     volumes:
        - shared_database:/usr/local/mongo
     networks:
-        - nutrient
-        - diary
+        - backend
     #environment:
     #    - MONGO_INITDB_ROOT_USERNAME=root 
     #    - MONGO_INITDB_ROOT_PASSWORD=root 
@@ -40,8 +66,13 @@ services:
 
 volumes:
     shared_database:
+    #dynamic.yaml:
+    #docker.sock:
+    #letsencrypt:
+
 
 networks:
-  nutrient:
-  diary:
+  backend:  
+  web:
+  
 

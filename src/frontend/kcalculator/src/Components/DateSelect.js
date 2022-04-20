@@ -6,7 +6,6 @@ const DateSelect = ({startDate, setDate}) => {
   return (
   <div className="col d-flex justify-content-around align-items-center">
     
-    <h2 className="d-flex justify-content-center">Date</h2>
     <div>
     <DatePicker 
       selected={startDate} 

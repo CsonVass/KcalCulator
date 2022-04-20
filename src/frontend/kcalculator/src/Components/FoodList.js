@@ -1,7 +1,7 @@
 import Food from "./Food"
 import NewFoodDialog from './NewFoodDialog';
 
-const FoodList = ({foods, onAdd, onDelete}) => {
+const FoodList = ({foods, onAdd, onDelete, onEdit}) => {
 
   const foodItems = () => {
     var foodList = []
@@ -21,6 +21,7 @@ const FoodList = ({foods, onAdd, onDelete}) => {
         }
 
         onDelete={() => onDelete(foodItem.id)}
+        onEdit={(amount) => onEdit(foodItem.id, amount)}
           
         
       ></Food>)

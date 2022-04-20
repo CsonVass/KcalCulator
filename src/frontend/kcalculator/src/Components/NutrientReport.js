@@ -1,17 +1,15 @@
-import React, { useState } from "react";
 
-const NutrientReport = ({sums, goals}) => {
+import EditGoalsDialog from "./EditGoalsDialog";
 
-
-  const [kcal, setKcal] = useState([sums.calorie, goals.calorie])
-  const [carbs, setCarbs] = useState([sums.carbs, goals.carbs])
-  const [protein, setProtein] = useState([sums.protein, goals.protein])
-  const [fat, setFat] = useState([sums.fat, goals.fat])
-  const [fiber, setFiber] = useState([sums.fiber, goals.fiber])
+const NutrientReport = ({sums, goals, editGoals}) => {
 
 
   return (
-    <>
+    <div className="d-flex flex-column">
+    <EditGoalsDialog
+       goals ={goals}
+       editGoals = {editGoals}
+        />
     <div className="card text-center">
           <div className="card-body">
         <h5 className="card-title">Kcal</h5>
@@ -42,7 +40,7 @@ const NutrientReport = ({sums, goals}) => {
         <p className="card-text">{sums.fiber} / {goals.fiber}</p>
       </div>
     </div>
-    </>
+    </div>
   )
 }
 

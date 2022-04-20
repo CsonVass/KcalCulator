@@ -65,6 +65,17 @@ export const Main = ({userId}) => {
     ascFucntion()
   }, [userId, date])
 
+  const findFoodKeyById = (foodId) => {
+    var ret;
+    var i = 0;
+    foods.forEach(food => {
+      if(food.id === foodId)
+        ret = i
+      i++
+    });
+    return ret
+  }
+
   const addFood =  async (food, amount) => {
 
       var newFoodItem = {food, amount}
@@ -76,6 +87,27 @@ export const Main = ({userId}) => {
         console.log(e)
       }  
      
+  }
+
+  const editGoals = async (nutrients) => {
+    try{
+      const response = await DiaryService.putGoals(userId, nutrients)
+      setGoals(response.goals)
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const editFood = async (foodId, amount) => {
+    try{
+      const response = await DiaryService.putFood(userId, formatDate(date), foodId, parseFloat(amount))
+      var newFoods = [...foods];
+      newFoods[findFoodKeyById(foodId)].amount = amount
+      setFoods(newFoods)
+      
+    }catch(e){
+      console.log(e)
+    }
   }
 
   const deleteFood = async (foodId) => {
@@ -97,19 +129,30 @@ useEffect(() => {
 
  return(
   <div className="Main row d-flex justify-content-around">
-    <div className="col col-12 col-md-6 col-lg-3">
-    <h1 className="d-flex justify-content-center">Diary</h1>
-      <DateSelect startDate={date} setDate={(date_) => setDate(date_)}/>
-      <FoodList
-       foods={foods}
-       onAdd={(food, amount) => addFood(food, amount)}
-       onDelete={(foodId) => deleteFood(foodId)}
-       />
-    </div>
-    <div className="col col-0 col-md-6 col-lg-3">
-    <h1 className="d-flex justify-content-center">Nutrient report</h1>
 
-      <NutrientReport sums={sums} goals={goals}/>
+    <div className="col col-12 col-md-3 col-lg-2">
+      <h1 className="d-flex justify-content-center">Date</h1>
+        <DateSelect startDate={date} setDate={(date_) => setDate(date_)}/>
+    </div>
+
+    <div className="col col-12 col-md-3 col-lg-6">
+     <h1 className="d-flex justify-content-center">Diary</h1>      
+        <FoodList
+        foods={foods}
+        onAdd={(food, amount) => addFood(food, amount)}
+        onDelete={(foodId) => deleteFood(foodId)}
+        onEdit={(foodId, amount) => editFood(foodId, amount)}
+        />
+    </div>
+   
+    <div className="col col-12 col-md-2 col-lg-3">
+      <h1 className="d-flex justify-content-center">Nutrient report</h1>
+
+        <NutrientReport 
+          sums={sums} 
+          goals={goals}
+          editGoals={editGoals}
+          />
     </div>
   </div>
 )
