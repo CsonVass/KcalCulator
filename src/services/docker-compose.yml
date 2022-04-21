@@ -2,20 +2,26 @@ version: '3.4'
 
 services:
 
-  #traefik:
-  #  image: "traefik:v2.6"
-  #  container_name: "traefik"
-  #  command:
-  #    #- "--log.level=DEBUG"
-  #    - "--api.insecure=true"
-  #    - "--providers.docker=true"
-  #    - "--providers.docker.exposedbydefault=false"
-  #    - "--entrypoints.web.address=:80"
-  #  ports:
-  #    - "80:80"
-  #    - "8080:8080"
-  #  volumes:
-  #    - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  traefik:
+    image: "traefik:v2.6"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--providers.docker.network=web"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.http.routers.api.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.api.service=api@internal"
+    networks:
+      - web
 
 
   nutrientservice.api:
@@ -24,14 +30,15 @@ services:
       context: .
       dockerfile: NutrientService\NutrientService.API\Dockerfile
     ports:
+      - 81:80
       - 60087:443
     networks:
         - backend
         - web
-    #labels:
-    #  - "traefik.enable=true"
-    #  - "traefik.http.routers.nutrients.rule=Host(`kcalculator.com`) && Path(`/v1/nutrients`)"
-    #  #- "traefik.http.routers.nutrients.entrypoints=web"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nutrients.rule=Host(`localhost`) && PathPrefix(`/api/nutrient`)"
+      - "traefik.http.routers.nutrients.entrypoints=web"
 
 
   diaryservice.api:
@@ -40,14 +47,16 @@ services:
       context: .
       dockerfile: DiaryService\DiaryService.API\Dockerfile
     ports:
+      - 82:80
       - 60088:443
     networks:
         - backend
         - web
-    #labels:
-    #  - "traefik.enable=true"
-    #  - "traefik.http.routers.diary.rule=Host(`kcalculator.com`) && Path(`/v1/diary`)"
-    #  #- "traefik.http.routers.diary.entrypoints=web"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.diary.rule=Host(`localhost`) && PathPrefix(`/api/diaries`)"
+      - "traefik.http.routers.diary.entrypoints=web"
+
 
 
   mongodb_container:
@@ -67,12 +76,17 @@ services:
 volumes:
     shared_database:
     #dynamic.yaml:
-    #docker.sock:
+    docker.sock:
     #letsencrypt:
 
 
 networks:
   backend:  
+    external: false
+    name: backend
   web:
+    external: false
+    name: web
+  
   
 
