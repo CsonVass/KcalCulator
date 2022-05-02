@@ -24,7 +24,6 @@ services:
       - web
 
 
-
   nutrientservice.api:
     image: ${DOCKER_REGISTRY-}nutrientserviceapi
     build:
@@ -32,12 +31,10 @@ services:
       dockerfile: NutrientService\NutrientService.API\Dockerfile
     ports:
       - 81:80
-#      - 60087:443
+      #- 60087:443
     networks:
         - backend
         - web
-    depends_on:
-      - mongodb_container
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.nutrients.rule=Host(`localhost`) && PathPrefix(`/api/nutrient`)"
@@ -51,12 +48,10 @@ services:
       dockerfile: DiaryService\DiaryService.API\Dockerfile
     ports:
       - 82:80
-#      - 60088:443
+      #- 60088:443
     networks:
         - backend
         - web
-    depends_on:
-      -  mongodb_container
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.diary.rule=Host(`localhost`) && PathPrefix(`/api/diaries`)"
@@ -74,57 +69,8 @@ services:
     networks:
         - backend
     #environment:
-    #    - MONGO_INITDB_ROOT_USERNAME=root
-    #    - MONGO_INITDB_ROOT_PASSWORD=root
-
-  rabbitmq-container:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    hostname: rabbitmq
-    ports:
-    - 5672:5672
-    - 15672:15672
-    networks:
-      - backend
-      - web
-    environment:
-      - RABBITMQ_DEFAULT_USER=kcal
-      - RABBITMQ_DEFAULT_PASS=kcal
-
-  email-provider:
-    image: message-producer
-    build:
-      context: .
-      dockerfile: spring-rabbitmq-producer\Dockerfile
-    ports:
-#    - 9000:9000
-    - 83:9000
-    environment:
-      - SPRING_RABBITMQ_HOST=rabbitmq
-    networks:
-      - backend
-      - web
-    depends_on:
-      - rabbitmq-container
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.email.rule=Host(`localhost`) && PathPrefix(`/publish`)"
-      - "traefik.http.routers.email.entrypoints=web"
-
-  email-consumer:
-    image: email-sender
-    build:
-      context: .
-      dockerfile: spring-email\Dockerfile
-    ports:
-    - 9001:9001
-    environment:
-      - SPRING_RABBITMQ_HOST=rabbitmq
-    depends_on:
-      - rabbitmq-container
-    networks:
-      - backend
-      - web
+    #    - MONGO_INITDB_ROOT_USERNAME=root 
+    #    - MONGO_INITDB_ROOT_PASSWORD=root 
       
 
 volumes:
@@ -135,12 +81,12 @@ volumes:
 
 
 networks:
-  backend:
+  backend:  
     external: false
     name: backend
   web:
     external: false
     name: web
-
+  
   
 
