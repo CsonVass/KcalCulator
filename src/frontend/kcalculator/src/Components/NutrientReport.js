@@ -1,7 +1,23 @@
-
 import EditGoalsDialog from "./EditGoalsDialog";
+import { postEmail } from "../Services/email-service";
+import { Button } from "react-bootstrap";
 
 const NutrientReport = ({sums, goals, editGoals}) => {
+
+  const handleSend = () => {
+      postEmail("vasscsongor2000@gmail.com", "Nutrient report", 
+      `Hi!\n\n` + 
+      `Your daily report goes like this:\n\n` +
+      `Kcal: ${sums.calorie} / ${goals.calorie}\n` +
+      `Carbs: ${sums.carbs} / ${goals.carbs}\n` +
+      `Protein: ${sums.protein} / ${goals.protein}\n` +
+      `Fat: ${sums.fat} / ${goals.fat}\n` +
+      `Fiber: ${sums.fiber} / ${goals.fiber}\n\n` +
+
+      `Have a nice day!\n\n` +
+
+      `KCalCulator`)
+  }
 
 
   return (
@@ -10,6 +26,9 @@ const NutrientReport = ({sums, goals, editGoals}) => {
        goals ={goals}
        editGoals = {editGoals}
         />
+   <Button variant="warning" className="mb-3" onClick={handleSend}>
+      Send nutrient report
+    </Button>
     <div className="card text-center">
           <div className="card-body">
         <h5 className="card-title">Kcal</h5>

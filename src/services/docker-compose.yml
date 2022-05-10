@@ -51,6 +51,7 @@ services:
       dockerfile: DiaryService\DiaryService.API\Dockerfile
     ports:
       - 82:80
+#      - 60088:80
 #      - 60088:443
     networks:
         - backend
@@ -125,7 +126,37 @@ services:
     networks:
       - backend
       - web
-      
+
+  postgres:
+    image: postgres:13.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    networks:
+      - web
+
+  keycloak:
+    depends_on:
+      - postgres
+    container_name: local_keycloak
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+    image: jboss/keycloak:13.0.0
+    ports:
+      - 8090:8080
+    restart: unless-stopped
+    networks:
+      - web
+
+
 
 volumes:
     shared_database:

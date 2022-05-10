@@ -4,9 +4,13 @@ import DateSelect from './DateSelect';
 import FoodList from './FoodList';
 import NutrientReport from './NutrientReport';
 import * as DiaryService from '../Services/diary-service';
+import { useKeycloak } from "@react-keycloak/web";
 
 
-export const Main = ({userId}) => {
+export const Main = () => {
+  const { keycloak, initialized } = useKeycloak();
+
+  const [userId, setUserId] = useState(keycloak.tokenParsed.preferred_username);
   const [foods, setFoods] = useState([])
   const [date, setDate] = useState(new Date())
   const [goals, setGoals] = useState([])
@@ -129,7 +133,6 @@ useEffect(() => {
 
  return(
   <div className="Main row d-flex justify-content-around">
-
     <div className="col col-12 col-md-3 col-lg-2">
       <h1 className="d-flex justify-content-center">Date</h1>
         <DateSelect startDate={date} setDate={(date_) => setDate(date_)}/>
