@@ -32,6 +32,7 @@ namespace NutrientService.API.Controllers
         [HttpGet("{name}")]
         [ProducesResponseType(typeof(FoodNamesDTO), (int) HttpStatusCode.OK)]
         public async Task<ActionResult<FoodNamesDTO>> GetFoodByName(string name){
+            System.Console.WriteLine($"Get request with param:{name}");
             FoodNamesDTO result = new FoodNamesDTO(await foodManager.GetFoodsByName(name));
 
             if (result == null)

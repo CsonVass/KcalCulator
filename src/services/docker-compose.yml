@@ -13,55 +13,53 @@ services:
       - "--entrypoints.web.address=:80"
       - "--providers.docker.network=web"
     ports:
-      - "80:80"
-      - "8080:8080"
+      - 80:80
+      - 8088:8080
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - web
     labels:
       - "traefik.http.routers.api.rule=Host(`traefik.localhost`)"
       - "traefik.http.routers.api.service=api@internal"
-    networks:
-      - web
+      - "traefik.http.routers.frontend.entrypoints=http"
 
 
 
-  nutrientservice.api:
+  nutrientservice:
     image: ${DOCKER_REGISTRY-}nutrientserviceapi
+    container_name: nutrient-service
+    depends_on:
+      - mongodb_container
     build:
       context: .
       dockerfile: NutrientService\NutrientService.API\Dockerfile
-    ports:
-      - 81:80
-#      - 60087:443
     networks:
         - backend
         - web
-    depends_on:
-      - mongodb_container
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.nutrients.rule=Host(`localhost`) && PathPrefix(`/api/nutrient`)"
+      - "traefik.http.routers.nutrients.rule=Host(`kcalculator.localhost`) && PathPrefix(`/api/nutrient`)"
       - "traefik.http.routers.nutrients.entrypoints=web"
+#      - "traefik.http.routers.nutrients.middlewares=traefik-forward-auth"
 
 
-  diaryservice.api:
+  diaryservice:
     image: ${DOCKER_REGISTRY-}diaryserviceapi
+    container_name: diary-service
+    depends_on:
+      - mongodb_container
     build:
       context: .
       dockerfile: DiaryService\DiaryService.API\Dockerfile
-    ports:
-      - 82:80
-#      - 60088:80
-#      - 60088:443
     networks:
         - backend
         - web
-    depends_on:
-      -  mongodb_container
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.diary.rule=Host(`localhost`) && PathPrefix(`/api/diaries`)"
+      - "traefik.http.routers.diary.rule=Host(`kcalculator.localhost`) && PathPrefix(`/api/diaries`)"
       - "traefik.http.routers.diary.entrypoints=web"
+#      - "traefik.http.routers.diary.middlewares=traefik-forward-auth"
 
 
 
@@ -71,12 +69,9 @@ services:
     ports:
       - 27017:27017
     volumes:
-       - shared_database:/usr/local/mongo
+       - shared_database:/var/lib/mongo/data
     networks:
         - backend
-    #environment:
-    #    - MONGO_INITDB_ROOT_USERNAME=root
-    #    - MONGO_INITDB_ROOT_PASSWORD=root
 
   rabbitmq-container:
     image: rabbitmq:3-management
@@ -87,82 +82,140 @@ services:
     - 15672:15672
     networks:
       - backend
-      - web
     environment:
-      - RABBITMQ_DEFAULT_USER=kcal
-      - RABBITMQ_DEFAULT_PASS=kcal
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
 
   email-provider:
     image: message-producer
+    container_name: email-producer
+    depends_on:
+      - rabbitmq-container
     build:
       context: .
       dockerfile: spring-rabbitmq-producer\Dockerfile
     ports:
-#    - 9000:9000
     - 83:9000
     environment:
       - SPRING_RABBITMQ_HOST=rabbitmq
     networks:
       - backend
       - web
-    depends_on:
-      - rabbitmq-container
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.email.rule=Host(`localhost`) && PathPrefix(`/publish`)"
+      - "traefik.http.routers.email.rule=Host(`kcalculator.localhost`) && PathPrefix(`/publish`)"
       - "traefik.http.routers.email.entrypoints=web"
+#      - "traefik.http.routers.email.middlewares=traefik-forward-auth"
 
   email-consumer:
     image: email-sender
+    container_name: email-consumer
+    depends_on:
+      - rabbitmq-container
     build:
       context: .
       dockerfile: spring-email\Dockerfile
     ports:
     - 9001:9001
-    environment:
-      - SPRING_RABBITMQ_HOST=rabbitmq
-    depends_on:
-      - rabbitmq-container
     networks:
       - backend
-      - web
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
 
   postgres:
     image: postgres:13.2
+    container_name: db-keycloak
     restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - keycloak_db_data_vol:/var/lib/postgresql/data
+    networks:
+      - backend
     environment:
       POSTGRES_DB: keycloak
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: keycloak
-    networks:
-      - web
+    labels:
+      - "traefik.enable=false"
 
   keycloak:
+    image: jboss/keycloak:16.1.1
+    command: ["-Djboss.http.port=80"]
+    container_name: keycloak
     depends_on:
       - postgres
-    container_name: local_keycloak
-    environment:
-      DB_VENDOR: postgres
-      DB_ADDR: postgres
-      DB_DATABASE: keycloak
-      DB_USER: keycloak
-      DB_PASSWORD: keycloak
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Pa55w0rd
-    image: jboss/keycloak:13.0.0
+      - traefik
     ports:
-      - 8090:8080
-    restart: unless-stopped
+    - 8080:8080
+    - 8081:80
+    networks:
+        backend:
+           aliases:
+              - keycloak
+        web:
+           aliases:
+              - keycloak.localhost
+    environment:
+      DB_VENDOR: ${KC_DB_VENDOR}
+      DB_ADDR: ${KC_DB_ADDR}
+      DB_DATABASE: ${KC_DB_DATABASE}
+      DB_USER: ${KC_DB_USER}
+      DB_PASSWORD: ${KC_DB_PASSWORD}
+      KEYCLOAK_USER: ${KC_KEYCLOAK_USER}
+      KEYCLOAK_PASSWORD: ${KC_KEYCLOAK_PASSWORD}
+      LOG_LEVEL: debug
+      PROXY_ADDRESS_FORWARDING: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.oauth.rule=Host(`keycloak.localhost`)"
+      - "traefik.http.routers.oauth.entrypoints=web"
+
+
+  forwardauth:
+    image: funkypenguin/traefik-forward-auth
+    container_name: forwardauth
+    depends_on:
+      - keycloak
     networks:
       - web
+    environment:
+      - SECRET=${KC_SECRET}
+#      - PROVIDER_URI=http://keycloak.localhost/auth/realms/kcalculator
+      - OIDC_ISSUER=http://keycloak.localhost/auth/realms/kcalculator
+      - CLIENT_ID=${KC_CLIENT_ID}
+      - CLIENT_SECRET=${KC_CLIENT_SECRET}
+      - LOG_LEVEL=debug
+      - ENCRYPTION_KEY=${KC_ENCRYPTION_KEY}
+      - INSECURE_COOKIES=true
+      - COOKIE_DOMAINS=keycloak.localhost
+      - AUTH_HOST=keycloak.localhost
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.forwardauth.loadbalancer.server.port=4181"
+      - "traefik.http.routers.forwardauth.entrypoints=web"
+      - "traefik.http.routers.forwardauth.middlewares=traefik-forward-auth"
+      - "traefik.http.routers.forwardauth.rule=Host(`keycloak.localhost`) && PathPrefix(`/_oauth`)"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://forwardauth:4181"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User"
+      - "traefik.http.middlewares.traefik-forward-auth.forwardauth.trustForwardHeader=true"
 
 
+
+#  whoami:
+#    # A container that exposes an API to show its IP address
+#    image: traefik/whoami
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.whoami.entrypoints=web"
+#      - "traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)"
+#    networks:
+#      - web
 
 volumes:
     shared_database:
-    #dynamic.yaml:
     docker.sock:
-    #letsencrypt:
+    keycloak_db_data_vol:
 
 
 networks:
@@ -172,6 +225,7 @@ networks:
   web:
     external: false
     name: web
+
 
   
 

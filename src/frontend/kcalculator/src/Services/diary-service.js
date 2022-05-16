@@ -1,9 +1,17 @@
-const axios = require('axios');
+// import Axios from 'axios';
+
+
+// const axios = Axios.create({
+//     baseURL: 'http://kcalculator.localhost/api',
+//     withCredentials: true,
+// })
+
+import axios from 'axios';
 
 //GET
 export function getDiaries(){
     try{
-        const promise = axios.get('http://localhost/api/diaries')
+        const promise = axios.get('http://kcalculator.localhost/api/diaries')
         const dataPromise = promise.then((response) => response.data)
         return dataPromise
     }catch (err) {
@@ -13,7 +21,7 @@ export function getDiaries(){
 
 export function getDiary(id){
     try{
-        const promise = axios.get(`http://localhost/api/diaries/${id}`)
+        const promise = axios.get(`http://kcalculator.localhost/api/diaries/${id}`)
         const dataPromise = promise.then((response) => response.data)
         return dataPromise
     }catch (err) {
@@ -23,7 +31,7 @@ export function getDiary(id){
 
     export function getDiaryByDate(id, date){
     try{
-        const promise = axios.get(`http://localhost/api/diaries/${id}/${date}`)
+        const promise = axios.get(`http://kcalculator.localhost/api/diaries/${id}/${date}`)
         const dataPromise = promise.then((response) => response.data)
         return dataPromise  
     }catch (err) {
@@ -36,7 +44,7 @@ export function getDiary(id){
 //POST
 export function postFoodItem(id, date, food, amount){
     try{ 
-        const promise = axios.post(`http://localhost/api/diaries/${id}/dailyrecords/${date}`, {
+        const promise = axios.post(`http://kcalculator.localhost/api/diaries/${id}/dailyrecords/${date}`, {
                 food: food,
                 userId: id,
                 quantity: amount,
@@ -53,7 +61,7 @@ export function postFoodItem(id, date, food, amount){
 //PUT
 export function putGoals(id, goals){   
     try{
-    const promise = axios.put(`http://localhost/api/diaries/${id}`, {
+    const promise = axios.put(`http://kcalculator.localhost/api/diaries/${id}`, {
         calorie: goals.calorie || 0,
         protein: goals.protein || 0,
         fat: goals.fat || 0,
@@ -71,7 +79,7 @@ export function putGoals(id, goals){
 
 export function putFood(id, date, foodid, amount){   
     try{
-    const promise = axios.put(`http://localhost/api/diaries/${id}/dailyrecords/${date}`, {
+    const promise = axios.put(`http://kcalculator.localhost/api/diaries/${id}/dailyrecords/${date}`, {
         recordId: foodid,
         userId: id,
         quantity: amount, 
@@ -87,9 +95,17 @@ export function putFood(id, date, foodid, amount){
 
 
 //DELETE
+export function deleteAccount(id){
+    try{
+        axios.delete(`http://kcalculator.localhost/api/diaries/${id}`)
+    }catch (err) {
+        console.log(err);
+    }
+}
+
 export function deleteFood(id, date, recordid){
     try{
-        axios.delete(`http://localhost/api/diaries/${id}/dailyrecords/${date}/records/${recordid}`)
+        axios.delete(`http://kcalculator.localhost/api/diaries/${id}/dailyrecords/${date}/records/${recordid}`)
     }catch (err) {
         console.log(err);
     }

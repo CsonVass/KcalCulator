@@ -8,9 +8,9 @@ import { useKeycloak } from "@react-keycloak/web";
 
 
 export const Main = () => {
-  const { keycloak, initialized } = useKeycloak();
+  const { keycloak } = useKeycloak();
 
-  const [userId, setUserId] = useState(keycloak.tokenParsed.preferred_username);
+  const [userId] = useState(keycloak.tokenParsed.preferred_username);
   const [foods, setFoods] = useState([])
   const [date, setDate] = useState(new Date())
   const [goals, setGoals] = useState([])
@@ -58,7 +58,7 @@ export const Main = () => {
   useEffect(() => {
     async function ascFucntion() {
       const diary = await DiaryService.getDiaryByDate(userId, formatDate(date))
-      var records = diary.records
+      var records = diary?.records
       var loadFoods = []
       records.forEach(record => {
         var foodItem = {id: record.recordId, food: record.food, amount: record.quantity}
@@ -104,7 +104,7 @@ export const Main = () => {
 
   const editFood = async (foodId, amount) => {
     try{
-      const response = await DiaryService.putFood(userId, formatDate(date), foodId, parseFloat(amount))
+      await DiaryService.putFood(userId, formatDate(date), foodId, parseFloat(amount))
       var newFoods = [...foods];
       newFoods[findFoodKeyById(foodId)].amount = amount
       setFoods(newFoods)

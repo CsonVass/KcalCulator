@@ -1,11 +1,13 @@
 import EditGoalsDialog from "./EditGoalsDialog";
 import { postEmail } from "../Services/email-service";
 import { Button } from "react-bootstrap";
+import { useKeycloak } from "@react-keycloak/web";
 
 const NutrientReport = ({sums, goals, editGoals}) => {
+  const { keycloak } = useKeycloak();
 
   const handleSend = () => {
-      postEmail("vasscsongor2000@gmail.com", "Nutrient report", 
+      postEmail(`${keycloak.idTokenParsed.email}`, "Nutrient report", 
       `Hi!\n\n` + 
       `Your daily report goes like this:\n\n` +
       `Kcal: ${sums.calorie} / ${goals.calorie}\n` +

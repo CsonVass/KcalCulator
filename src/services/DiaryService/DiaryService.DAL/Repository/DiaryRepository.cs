@@ -101,7 +101,9 @@ namespace DiaryService.DAL.Repository
             Diary diary = await GetDiary(record.UserId);
             if(diary == null)
             {
-                return false;
+                await CreateDiary(new Diary { UserId = record.UserId, Consumption = new List<DailyRecords>(),
+                                                Goals = new Nutrients()});
+                diary = await GetDiary(record.UserId);
             }
 
             DailyRecords dailyRecords = diary

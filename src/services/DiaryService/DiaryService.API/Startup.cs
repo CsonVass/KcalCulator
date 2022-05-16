@@ -39,7 +39,10 @@ namespace DiaryService.API
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                     builder =>
                                     {
-                                        builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+                                        builder.WithOrigins("http://localhost:3000")
+                                               .AllowAnyMethod()
+                                               .AllowAnyHeader();
+                                              // .AllowCredentials();
                                     });
             });
 

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import * as NutrientService from "../Services/nutrient-service"
 
 const NewFoodDialog = ({onAdd}) => {
-    
     const [show, setShow] = useState(false);
 
     const [searchWord, setSearchWord] = useState("");

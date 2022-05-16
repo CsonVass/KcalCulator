@@ -39,7 +39,7 @@ public class DiaryController : ControllerBase
 
         if (result == null)
         {
-            return NotFound();
+            return NotFound(new Diary());
         }
 
         return Ok(result);
@@ -54,7 +54,7 @@ public class DiaryController : ControllerBase
 
         if(result == null)
         {
-            return NotFound();
+            return NotFound(new DailyRecordsDTO { Date=date, Records=new List<Record>()});
         }
         return Ok(result);
     }

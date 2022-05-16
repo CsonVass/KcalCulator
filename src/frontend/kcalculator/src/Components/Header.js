@@ -3,7 +3,7 @@ import { Navbar } from 'react-bootstrap';
 import { useKeycloak } from "@react-keycloak/web";
 
 const Header = () => {
-  const { keycloak, initialized } = useKeycloak();
+  const { keycloak } = useKeycloak();
     return(
         <Navbar className="Header navbar navbar-light">
         <div className="container-fluid">
@@ -15,23 +15,36 @@ const Header = () => {
         <div className="hidden xl:flex items-center space-x-5">
                <div className="hover:text-gray-200">
                  {!keycloak.authenticated && (
-                   <button
+                   <div className="btn-group">
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => keycloak.login()}
+                    >
+                      Login
+                    </button>
+                    <button
                      type="button"
-                     className="btn btn-primary"
-                     onClick={() => keycloak.login()}
+                     className="btn btn-primary-outline"
+                     onClick={() => keycloak.register()}
                    >
-                     Login
+                     Register
                    </button>
+                   </div>
                  )}
 
+                  
                  {!!keycloak.authenticated && (
-                   <button
-                     type="button"
-                     className="btn text-blue-800"
-                     onClick={() => keycloak.logout()}
-                   >
-                     Logout ({keycloak.tokenParsed.preferred_username})
-                   </button>
+                   <div className="btn-group">
+                    <button
+                      type="button"
+                      className="btn text-blue-800"
+                      onClick={() => keycloak.logout()}
+                    >
+                      Logout ({keycloak.tokenParsed.preferred_username})
+                    </button>
+                     
+                    </div>
                  )}
                </div>
              </div>
