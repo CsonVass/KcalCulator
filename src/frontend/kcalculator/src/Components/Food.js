@@ -17,18 +17,18 @@ const Food = ({ foodName, amount, nutrients, onDelete, onEdit }) => {
             <input type="number" defaultValue={amount} onChange={(e) => setAmount_(e.target.value)}/> :  amount}g</h2>
             <div className="container">
                 <div className="row">
-                    <div className="col-6">Kcal: {nutrients.calorie}</div>
+                    <div className="col-6">Kcal: {parseFloat(nutrients.calorie.toFixed(2))}</div>
                 </div>
 
                 <div className="row">
-                    <div className="col-6">Carbs: {nutrients.carbs}g</div>
-                    <div className="col-6">Protein: {nutrients.protein}g</div>
+                    <div className="col-6">Carbs: {parseFloat(nutrients.carbs.toFixed(2))}g</div>
+                    <div className="col-6">Protein: {parseFloat(nutrients.protein.toFixed(2))}g</div>
  
                 </div>
 
                 <div className="row">
-                    <div className="col-6">Fat: {nutrients.fat}g</div>
-                    <div className="col-6">Fiber: {nutrients.fiber}</div>
+                    <div className="col-6">Fat: {parseFloat(nutrients.fat.toFixed(2))}g</div>
+                    <div className="col-6">Fiber: {parseFloat(nutrients.fiber.toFixed(2))}</div>
 
                 </div>
 

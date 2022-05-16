@@ -107,6 +107,11 @@ export const Main = () => {
       await DiaryService.putFood(userId, formatDate(date), foodId, parseFloat(amount))
       var newFoods = [...foods];
       newFoods[findFoodKeyById(foodId)].amount = amount
+      newFoods[findFoodKeyById(foodId)].food.nutrients.calorie *= amount / 100
+      newFoods[findFoodKeyById(foodId)].food.nutrients.carbs *= amount / 100
+      newFoods[findFoodKeyById(foodId)].food.nutrients.protein *= amount / 100
+      newFoods[findFoodKeyById(foodId)].food.nutrients.fat *= amount / 100
+      newFoods[findFoodKeyById(foodId)].food.nutrients.fiber *= amount / 100
       setFoods(newFoods)
       
     }catch(e){

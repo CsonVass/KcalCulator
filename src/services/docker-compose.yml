@@ -166,6 +166,9 @@ services:
       KEYCLOAK_PASSWORD: ${KC_KEYCLOAK_PASSWORD}
       LOG_LEVEL: debug
       PROXY_ADDRESS_FORWARDING: true
+      KEYCLOAK_IMPORT: /tmp/realm-kcalculator.json
+    volumes:
+      - ./realm-kcalculator.json:/tmp/realm-kcalculator.json
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.oauth.rule=Host(`keycloak.localhost`)"
@@ -181,7 +184,6 @@ services:
       - web
     environment:
       - SECRET=${KC_SECRET}
-#      - PROVIDER_URI=http://keycloak.localhost/auth/realms/kcalculator
       - OIDC_ISSUER=http://keycloak.localhost/auth/realms/kcalculator
       - CLIENT_ID=${KC_CLIENT_ID}
       - CLIENT_SECRET=${KC_CLIENT_SECRET}
